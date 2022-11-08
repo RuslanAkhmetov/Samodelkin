@@ -53,8 +53,11 @@ object CharacterGenerator {
 
 suspend fun fetchCharacterData() : CharacterGenerator.CharacterData {
             return withContext(Dispatchers.IO){
-                val apiData = URL(CHARACTER_DATA_API).readText()
-                CharacterGenerator.fromApiData(apiData)
+                var apiData = ""
+                do {
+                    apiData = URL(CHARACTER_DATA_API).readText()
+                } while(CharacterGenerator.fromApiData(apiData).str.toInt() < 10 )
+                    CharacterGenerator.fromApiData(apiData)
             }
 }
 
