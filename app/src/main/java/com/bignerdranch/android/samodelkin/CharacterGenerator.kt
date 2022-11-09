@@ -53,11 +53,11 @@ object CharacterGenerator {
 
 suspend fun fetchCharacterData() : CharacterGenerator.CharacterData {
             return withContext(Dispatchers.IO){
-                var apiData = ""
+                var apiData: String
                 do {
                     apiData = URL(CHARACTER_DATA_API).readText()
                 } while(CharacterGenerator.fromApiData(apiData).str.toInt() < 10 )
-                    CharacterGenerator.fromApiData(apiData)
+                CharacterGenerator.fromApiData(apiData)
             }
 }
 

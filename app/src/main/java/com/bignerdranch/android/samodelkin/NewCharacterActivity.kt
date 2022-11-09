@@ -14,8 +14,11 @@ private var Bundle.characterData
 
 
 class NewCharacterActivity : AppCompatActivity() {
-    private var characterData = CharacterGenerator.generate()
+
     private val scope = CoroutineScope(SupervisorJob() + CoroutineName("CHARACTER_API"))
+
+    private var  characterData : CharacterGenerator.CharacterData = CharacterGenerator.generate()
+
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
         savedInstanceState.characterData = characterData
@@ -24,12 +27,15 @@ class NewCharacterActivity : AppCompatActivity() {
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_character)
+
         scope.launch {
             characterData = savedInstanceState?.characterData
                 ?: fetchCharacterData()
         }
+
+        setContentView(R.layout.activity_new_character)
 
         generateButton.setOnClickListener {
              scope.launch {
@@ -39,7 +45,6 @@ class NewCharacterActivity : AppCompatActivity() {
         }
 
         displayCharacterData()
-
 
     }
 
