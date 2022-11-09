@@ -1,7 +1,6 @@
 package com.bignerdranch.android.samodelkin
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.io.Serializable
 import java.net.URL
 
@@ -15,6 +14,8 @@ private fun Int.roll() = (0 until this).sumOf { (1..6).toList().rand() }
 private val firstName = listOf("Eli", "Alex", "Sophie")
 
 private val secondName = listOf("Lightweaver", "Greatfoot", "Oakenfeld")
+
+
 
 object CharacterGenerator {
     data class CharacterData(
@@ -50,9 +51,16 @@ object CharacterGenerator {
     )
 }
 
-suspend fun CoroutineScope.fetchCharacterData() : CharacterGenerator.CharacterData {
-    return withContext(this.coroutineContext) {
-        val apiData = URL(CHARACTER_DATA_API).readText()
-        CharacterGenerator.fromApiData(apiData)
-    }
+suspend fun fetchCharacterData() : CharacterGenerator.CharacterData {
+            return withContext(Dispatchers.IO){
+                var apiData = ""
+                do {
+                    apiData = URL(CHARACTER_DATA_API).readText()
+                } while(CharacterGenerator.fromApiData(apiData).str.toInt() < 10 )
+                    CharacterGenerator.fromApiData(apiData)
+            }
 }
+
+
+
+
